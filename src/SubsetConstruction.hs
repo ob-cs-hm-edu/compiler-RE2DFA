@@ -10,39 +10,6 @@ import           Types
 nfa2dfa :: NFA -> DFA
 nfa2dfa nfa = dfaFromQandT nfa $ subsetConstruction nfa
 
-type Q = Set.Set (Set.Set NFAState)
-type T = Set.Set ((Set.Set NFAState,Char), Set.Set NFAState)
-
-dfaFromQandT :: NFA -> (Q,T) -> DFA
-dfaFromQandT nfa (q,t) =
-  let nfaAndDfaStates = Map.fromList
-                      $ map (\(i, nfastates) -> (nfastates, DFAState i))
-                      $ zip [0..]
-                      $ Set.toList q
-      dfaSigmaFromT = Set.map (\((fromStates, c), toStates) ->
-                               ((fromJust $ Map.lookup fromStates
-                                                       nfaAndDfaStates
-                                ,c
-                                )
-                               , fromJust $ Map.lookup toStates
-                                                       nfaAndDfaStates
-                               )
-                              ) t
-  in DFA
-      { dfaSigma = dfaSigmaFromT
-      , dfaStart = fromJust $ Map.lookup (epsilonClosure (Set.singleton
-                                                          $ nfaStart nfa) nfa)
-                                         nfaAndDfaStates
-      , dfaAcceptingStates = Set.fromList
-                           $ Map.elems
-                           $ (\s -> Map.filterWithKey
-                                  (\k _ -> k `Set.member` s) nfaAndDfaStates)
-                           $ Set.filter
-                                ( not
-                                . Set.null
-                                . Set.intersection (nfaAcceptingStates nfa)) q
-      }
-
 subsetConstruction :: NFA -> (Q,T)
 subsetConstruction nfa =
   let q0 = epsilonClosure (Set.singleton $ nfaStart nfa) nfa
@@ -81,3 +48,36 @@ epsilonClosure reachedStates nfa =
   in if newStates == reachedStates
      then newStates
      else epsilonClosure newStates nfa
+
+type Q = Set.Set (Set.Set NFAState)
+type T = Set.Set ((Set.Set NFAState,Char), Set.Set NFAState)
+
+dfaFromQandT :: NFA -> (Q,T) -> DFA
+dfaFromQandT nfa (q,t) =
+  let nfaAndDfaStates = Map.fromList
+                      $ map (\(i, nfastates) -> (nfastates, DFAState i))
+                      $ zip [0..]
+                      $ Set.toList q
+      dfaSigmaFromT = Set.map (\((fromStates, c), toStates) ->
+                               ((fromJust $ Map.lookup fromStates
+                                                       nfaAndDfaStates
+                                ,c
+                                )
+                               , fromJust $ Map.lookup toStates
+                                                       nfaAndDfaStates
+                               )
+                              ) t
+  in DFA
+      { dfaSigma = dfaSigmaFromT
+      , dfaStart = fromJust $ Map.lookup (epsilonClosure (Set.singleton
+                                                          $ nfaStart nfa) nfa)
+                                         nfaAndDfaStates
+      , dfaAcceptingStates = Set.fromList
+                           $ Map.elems
+                           $ (\s -> Map.filterWithKey
+                                  (\k _ -> k `Set.member` s) nfaAndDfaStates)
+                           $ Set.filter
+                                ( not
+                                . Set.null
+                                . Set.intersection (nfaAcceptingStates nfa)) q
+      }
