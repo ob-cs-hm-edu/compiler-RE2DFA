@@ -1,4 +1,6 @@
-module Hopcroft where
+module Hopcroft
+  ( dfa2min
+  ) where
 
 import qualified Data.Set as Set
 import           GHC.Exts (groupWith)

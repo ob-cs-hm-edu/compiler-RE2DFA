@@ -1,4 +1,6 @@
-module SubsetConstruction where
+module SubsetConstruction
+  ( nfa2dfa
+  ) where
 
 import qualified Data.Map   as Map
 import           Data.Maybe (fromJust, isNothing)

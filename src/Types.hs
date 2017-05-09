@@ -1,4 +1,14 @@
-module Types where
+module Types
+  ( RE(..)
+  , NFAState(..)
+  , NFA(..)
+  , nfaStates
+  , nfaBigSigma
+  , DFAState(..)
+  , DFA(..)
+  , dfaStates
+  , dfaBigSigma
+  ) where
 
 import           Data.List  (intercalate)
 import           Data.Maybe (catMaybes)
@@ -15,6 +25,12 @@ instance Show RE where
   show (ConcatenatedRE re1 re2) = "(" ++ show re1 ++ show re2 ++ ")"
   show (AlternativeRE re1 re2)  = "(" ++ show re1 ++ "|" ++ show re2 ++ ")"
   show (ClosureRE re)           = show re  ++ "*"
+
+newtype NFAState = NFAState { nfaStateNumber :: Integer }
+  deriving (Eq, Ord)
+
+instance Show NFAState where
+  show (NFAState i) = "n" ++ show i
 
 data NFA = NFA
   { -- nfaStates       :: Set.Set NFAState -- wird berechnet
@@ -38,12 +54,6 @@ nfaBigSigma = catMaybes
             . Set.map (snd . fst)
             . nfaSigma
 
-newtype NFAState = NFAState { nfaStateNumber :: Integer }
-  deriving (Eq, Ord)
-
-instance Show NFAState where
-  show (NFAState i) = "n" ++ show i
-
 instance Show NFA where
   -- Ausgabe in Datei speichern und mit [dot](http://www.graphviz.org/)
   -- umwandeln, z.B. `dot -Tpng -o nfa.png nfa.dot`
@@ -65,6 +75,12 @@ instance Show NFA where
         )
     ++ "\n}"
 
+newtype DFAState = DFAState Integer
+  deriving (Eq, Ord)
+
+instance Show DFAState where
+  show (DFAState i) = "d" ++ show i
+
 data DFA = DFA
   { -- dfaStates       :: Set.Set DFAState -- wird berechnet
     -- dfaBigSigma     :: [Char]           -- wird berechnet
@@ -72,12 +88,6 @@ data DFA = DFA
   , dfaStart           :: DFAState
   , dfaAcceptingStates :: Set.Set DFAState
   } deriving (Eq, Ord)
-
-newtype DFAState = DFAState Integer
-  deriving (Eq, Ord)
-
-instance Show DFAState where
-  show (DFAState i) = "d" ++ show i
 
 dfaStates :: DFA -> Set.Set DFAState
 dfaStates dfa =
@@ -110,10 +120,3 @@ instance Show DFA where
              ) $ Set.toList sigma
         )
     ++ "\n}"
-
-initialDFA :: DFAState -> DFA
-initialDFA startState = DFA
-  { dfaSigma           = Set.empty
-  , dfaStart           = startState
-  , dfaAcceptingStates = Set.empty
-  }

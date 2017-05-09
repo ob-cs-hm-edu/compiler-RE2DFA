@@ -1,4 +1,6 @@
-module Regex where
+module Regex
+  ( str2re
+  ) where
 
 import           Control.Applicative ((<$>))
 import           Data.Char           (isLetter)

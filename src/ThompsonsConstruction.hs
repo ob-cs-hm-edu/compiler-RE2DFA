@@ -1,4 +1,6 @@
-module ThompsonsConstruction where
+module ThompsonsConstruction
+  ( re2nfa
+  ) where
 
 import qualified Data.Set as Set
 import           Types
