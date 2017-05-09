@@ -8,7 +8,8 @@ import           Types
 re2nfa :: RE -> NFA
 re2nfa = re2nfa' 0
 
-re2nfa' :: Integer -> RE -> NFA
+re2nfa' :: Integer -- zu vergebende Nummer für den Startzustand.
+        -> RE -> NFA
 
 re2nfa' n (PrimitiveRE c) = NFA
   { nfaSigma = Set.singleton ((NFAState n, Just c), NFAState (n+1))
