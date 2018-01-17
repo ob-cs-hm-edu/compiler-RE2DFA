@@ -1,0 +1,44 @@
+name: RE2DFA
+version: '0.1.0.0'
+synopsis: regex to minimal DFA
+description: see README.md
+author: Oliver Braun
+maintainer: ob@cs.hm.edu
+license: BSD3
+homepage: http://ob.cs.hm.edu/lectures/compiler.html
+extra-source-files:
+- README.md
+dependencies:
+- base
+library:
+  source-dirs: src
+  exposed-modules:
+  - Hopcroft
+  - Regex
+  - SubsetConstruction
+  - ThompsonsConstruction
+  - Types
+  dependencies:
+  - containers
+executables:
+  re2dfa:
+    main: Main.hs
+    source-dirs: app
+    dependencies:
+    - optparse-applicative
+    - RE2DFA
+tests:
+  tests:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options:
+    - -O2
+    - -Wall
+    - -fwarn-tabs
+    - -funbox-strict-fields
+    - -threaded
+    - -fno-warn-unused-do-bind
+    dependencies:
+    - containers
+    - hspec
+    - RE2DFA
