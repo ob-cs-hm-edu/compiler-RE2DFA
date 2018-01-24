@@ -1,14 +1,34 @@
 # re2dfa
 
-Compilieren (und installieren) Sie, wie gewohnt mit `stack`.
+`re2dfa` erzeugt aus einem regulären Ausdruck mit Hilfe von Thompson's
+Construction einen nichtdeterministischen endlichen Automaten (NEA,
+*engl.* NFA).
 
-Erzeugt aus einem regulären Ausdruck mit Thompson's Construction einen
-nichtdeterministischen endlichen Automaten (NEA, *engl.* NFA).
-
-Aus dem NEA wird anschließend mit der Subset Construction ein deterministischer
-endlicher Automat (DEA, *engl* DFA) erzeugt.
+Aus dem NEA wird anschließend mit der Subset Construction ein
+deterministischer endlicher Automat (DEA, *engl* DFA) erzeugt.
 
 Mit Hopcroft's Algorithmus wird der DEA minimiert.
+
+Die Ausgaben der endlichen Automaten erfolgen in der
+[dot](http://www.graphviz.org/)-Syntax. Wenn Sie
+[graphviz](http://www.graphviz.org/) installiert haben, können Sie daraus ein
+Zustandsübergangsdiagramm erzeugen lassen. Alternativ kopieren Sie die
+Ausgabe und geben Sie sie unter <http://www.webgraphviz.com/> ein.
+
+## Voraussetzung
+
+- [Stack](https://docs.haskellstack.org/en/stable/install_and_upgrade/).
+
+## Installation
+
+Compilieren Sie mit dem Kommando
+
+```
+stack build
+```
+
+## Nutzung
+
 
     Usage: re2dfa COMMAND REGEX
       Umwandlung eines Regex in einen minimalen DFA
@@ -35,15 +55,9 @@ Wenn Sie `re2dfa` mit `stack install` installiert haben, reicht natürlich
 Über die verschiedenen Kommandos (`regex`, `nfa`, `dfa`, `mindfa`) können
 Sie die Zwischenstände ausgeben lassen.
 
-Die Ausgaben der endlichen Automaten erfolgen in der
-[dot](http://www.graphviz.org/)-Syntax. Wenn Sie
-[graphviz](http://www.graphviz.org/) installiert haben, können Sie daraus ein
-Zustandsübergangsdiagramm erzeugen lassen. Alternativ kopieren Sie den
-Code und geben Sie ihn unter <http://www.webgraphviz.com/> ein.
 
 Wenn Sie graphviz unter einem Unixoiden Betriebssystem
-(Linux, macOS, FreeBSD, ...) nutzen, können Sie ohne Umwege ein PNG erzeugen,
-z.B.
+(Linux, macOS, FreeBSD, ...) nutzen, können Sie ohne Umwege ein PNG erzeugen, z.B.
 
     re2dfa mindfa "a*(bb*|cb*)" | dot -Tpng -o fa.png
 
